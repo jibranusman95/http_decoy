@@ -5,7 +5,7 @@ Thanks for taking the time. Bug reports, documentation improvements, and feature
 ## Setup
 
 ```bash
-git clone https://github.com/jibranusman/http_decoy
+git clone https://github.com/jibranusman95/http_decoy
 cd http_decoy
 bundle install
 ```
@@ -45,7 +45,7 @@ Both must be green before a PR can be merged. CI enforces this on every push.
 
 ## Good first issues
 
-Check the [`good first issue`](https://github.com/jibranusman/http_decoy/issues?q=label%3A%22good+first+issue%22) label for beginner-friendly tasks.
+Check the [`good first issue`](https://github.com/jibranusman95/http_decoy/issues?q=label%3A%22good+first+issue%22) label for beginner-friendly tasks.
 
 ## Code style
 

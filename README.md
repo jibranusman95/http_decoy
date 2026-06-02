@@ -2,7 +2,7 @@
 
 **A real fake HTTP server. For real tests.**
 
-[![CI](https://github.com/jibranusman/http_decoy/actions/workflows/ci.yml/badge.svg)](https://github.com/jibranusman/http_decoy/actions)
+[![CI](https://github.com/jibranusman95/http_decoy/actions/workflows/ci.yml/badge.svg)](https://github.com/jibranusman95/http_decoy/actions)
 [![Gem Version](https://badge.fury.io/rb/http_decoy.svg)](https://badge.fury.io/rb/http_decoy)
 [![Downloads](https://img.shields.io/gem/dt/http_decoy)](https://rubygems.org/gems/http_decoy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -458,14 +458,14 @@ end
 ## Contributing
 
 ```bash
-git clone https://github.com/jibranusman/http_decoy
+git clone https://github.com/jibranusman95/http_decoy
 cd http_decoy
 bundle install
 bundle exec rspec      # run all tests
 bundle exec rubocop    # lint
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines. Good first issues are labeled [`good first issue`](https://github.com/jibranusman/http_decoy/issues?q=label%3A%22good+first+issue%22).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines. Good first issues are labeled [`good first issue`](https://github.com/jibranusman95/http_decoy/issues?q=label%3A%22good+first+issue%22).
 
 ---
 
