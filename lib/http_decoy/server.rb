@@ -7,7 +7,7 @@ require "json"
 require_relative "request_log"
 require_relative "handler_context"
 
-module HttpFake
+module HttpDecoy
   # A real WEBrick HTTP server that runs in a background thread.
   #
   # Uses WEBrick directly (no Rack::Handler) so it works with both
@@ -56,7 +56,7 @@ module HttpFake
       # Poll until WEBrick enters its accept loop.
       deadline = Time.now + 5
       sleep(0.005) until @webrick.status == :Running || Time.now > deadline
-      raise "httpfake: server failed to start within 5 seconds" unless @webrick.status == :Running
+      raise "http_decoy: server failed to start within 5 seconds" unless @webrick.status == :Running
 
       self
     end

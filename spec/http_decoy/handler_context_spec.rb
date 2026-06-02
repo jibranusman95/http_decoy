@@ -3,7 +3,7 @@
 require "spec_helper"
 require "rack/mock"
 
-RSpec.describe HttpFake::HandlerContext do
+RSpec.describe HttpDecoy::HandlerContext do
   def make_request(method: "POST", path: "/charges", body: nil, content_type: "application/json", query: "")
     env = Rack::MockRequest.env_for(
       "#{path}?#{query}",
@@ -90,7 +90,7 @@ RSpec.describe HttpFake::HandlerContext do
 
     it "raises ContractError when a key is missing" do
       expect { ctx.requires_body(:amount, :payment_method) }
-        .to raise_error(HttpFake::HandlerContext::ContractError, /payment_method/)
+        .to raise_error(HttpDecoy::HandlerContext::ContractError, /payment_method/)
     end
   end
 
@@ -101,17 +101,17 @@ RSpec.describe HttpFake::HandlerContext do
 
     it "raises ContractError on type mismatch" do
       expect { ctx.validates(:currency, type: Integer) }
-        .to raise_error(HttpFake::HandlerContext::ContractError, /currency/)
+        .to raise_error(HttpDecoy::HandlerContext::ContractError, /currency/)
     end
 
     it "validates min" do
       expect { ctx.validates(:amount, min: 1000) }
-        .to raise_error(HttpFake::HandlerContext::ContractError, /amount/)
+        .to raise_error(HttpDecoy::HandlerContext::ContractError, /amount/)
     end
 
     it "validates inclusion" do
       expect { ctx.validates(:currency, inclusion: %w[gbp eur]) }
-        .to raise_error(HttpFake::HandlerContext::ContractError, /currency/)
+        .to raise_error(HttpDecoy::HandlerContext::ContractError, /currency/)
     end
   end
 

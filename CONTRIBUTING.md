@@ -1,12 +1,12 @@
-# Contributing to httpfake
+# Contributing to http_decoy
 
 Thanks for taking the time. Bug reports, documentation improvements, and feature proposals are all welcome.
 
 ## Setup
 
 ```bash
-git clone https://github.com/jibranusman/httpfake
-cd httpfake
+git clone https://github.com/jibranusman/http_decoy
+cd http_decoy
 bundle install
 ```
 
@@ -14,7 +14,7 @@ bundle install
 
 ```bash
 bundle exec rspec          # full suite
-bundle exec rspec spec/httpfake/server_spec.rb   # single file
+bundle exec rspec spec/http_decoy/server_spec.rb   # single file
 ```
 
 ## Linting
@@ -45,7 +45,7 @@ Both must be green before a PR can be merged. CI enforces this on every push.
 
 ## Good first issues
 
-Check the [`good first issue`](https://github.com/jibranusman/httpfake/issues?q=label%3A%22good+first+issue%22) label for beginner-friendly tasks.
+Check the [`good first issue`](https://github.com/jibranusman/http_decoy/issues?q=label%3A%22good+first+issue%22) label for beginner-friendly tasks.
 
 ## Code style
 
@@ -58,7 +58,7 @@ Check the [`good first issue`](https://github.com/jibranusman/httpfake/issues?q=
 
 Open a GitHub issue with:
 - Ruby version (`ruby --version`)
-- httpfake version
+- http_decoy version
 - Minimal reproduction case (ideally a failing RSpec example)
 - What you expected vs what happened
 

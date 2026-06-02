@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module HttpFake
+module HttpDecoy
   # Thread-safe store of every request received by the fake server.
   # Cleared between examples via Server#stop → new Server per example.
   class RequestLog

@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require_relative "httpfake/version"
-require_relative "httpfake/configuration"
-require_relative "httpfake/route"
-require_relative "httpfake/route_map"
-require_relative "httpfake/router"
-require_relative "httpfake/request_log"
-require_relative "httpfake/handler_context"
-require_relative "httpfake/server"
-require_relative "httpfake/webmock_integration"
+require_relative "http_decoy/version"
+require_relative "http_decoy/configuration"
+require_relative "http_decoy/route"
+require_relative "http_decoy/route_map"
+require_relative "http_decoy/router"
+require_relative "http_decoy/request_log"
+require_relative "http_decoy/handler_context"
+require_relative "http_decoy/server"
+require_relative "http_decoy/webmock_integration"
 
-module HttpFake
+module HttpDecoy
   class << self
     # Global configuration.
     #
-    #   HttpFake.configure do |c|
+    #   HttpDecoy.configure do |c|
     #     c.auto_intercept = false   # opt out of WebMock auto-interception
     #   end
     def configure
@@ -27,7 +27,7 @@ module HttpFake
 
     # Define a named fake service.
     #
-    #   FakeStripe = HttpFake.define(:stripe) do
+    #   FakeStripe = HttpDecoy.define(:stripe) do
     #     base_url "https://api.stripe.com"
     #
     #     post "/v1/charges" do
@@ -39,7 +39,7 @@ module HttpFake
     #   RSpec.configure { |c| c.include FakeStripe.rspec_helpers }
     #
     def define(name = :default, &)
-      require_relative "httpfake/rspec"
+      require_relative "http_decoy/rspec"
       route_map = RouteMap.new
       route_map.instance_eval(&)
       Definition.new(name, route_map)

@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe HttpFake::RequestLog do
+RSpec.describe HttpDecoy::RequestLog do
   subject(:log) { described_class.new }
 
   let(:entry_attrs) do

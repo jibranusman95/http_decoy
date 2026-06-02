@@ -53,7 +53,7 @@ Metrics/BlockLength:
   Max: 60
   Exclude:
     - "spec/**/*"
-    - "httpfake.gemspec"
+    - "http_decoy.gemspec"
 
 Metrics/AbcSize:
   Max: 40
@@ -68,7 +68,7 @@ Metrics/PerceivedComplexity:
   Max: 12
 
 # ── RuboCop-RSpec path convention ──────────────────────────────────────────
-# Our module is HttpFake but the gem/dir is httpfake (no underscore).
+# Our module is HttpDecoy but the gem/dir is http_decoy (no underscore).
 # RSpec/SpecFilePathFormat expects http_fake/ — disable it.
 RSpec/SpecFilePathFormat:
   Enabled: false
@@ -78,7 +78,7 @@ RSpec/SpecFilePathFormat:
 # matcher (e.g. RSpec matchers, Ranges, Regexps all respond to ===).
 Style/CaseEquality:
   Exclude:
-    - "lib/httpfake/rspec.rb"
+    - "lib/http_decoy/rspec.rb"
 
 # Entry uses :http_method not :method, so this is moot — kept for awareness.
 Lint/StructNewOverride:

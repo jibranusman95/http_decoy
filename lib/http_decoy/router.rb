@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module HttpFake
+module HttpDecoy
   # Matches an incoming (method, path) pair against a list of Route objects.
   # Supports :param segments in patterns, e.g. "/v1/charges/:id".
   class Router

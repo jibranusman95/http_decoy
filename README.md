@@ -1,10 +1,10 @@
-# httpfake
+# http_decoy
 
 **A real fake HTTP server. For real tests.**
 
-[![CI](https://github.com/jibranusman/httpfake/actions/workflows/ci.yml/badge.svg)](https://github.com/jibranusman/httpfake/actions)
-[![Gem Version](https://badge.fury.io/rb/httpfake.svg)](https://badge.fury.io/rb/httpfake)
-[![Downloads](https://img.shields.io/gem/dt/httpfake)](https://rubygems.org/gems/httpfake)
+[![CI](https://github.com/jibranusman/http_decoy/actions/workflows/ci.yml/badge.svg)](https://github.com/jibranusman/http_decoy/actions)
+[![Gem Version](https://badge.fury.io/rb/http_decoy.svg)](https://badge.fury.io/rb/http_decoy)
+[![Downloads](https://img.shields.io/gem/dt/http_decoy)](https://rubygems.org/gems/http_decoy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
@@ -13,7 +13,7 @@ Your WebMock stubs are lying to you.
 
 They test that your code constructs the right HTTP call. Not that the API would accept it. Not that the response shape matches what your code expects. Not that you haven't been sending a stale request format for six months while production quietly breaks.
 
-**httpfake spins up a real Rack server inside your tests** — one that validates incoming request contracts, computes dynamic responses from real inputs, and fails loudly the moment your code sends something wrong.
+**http_decoy spins up a real Rack server inside your tests** — one that validates incoming request contracts, computes dynamic responses from real inputs, and fails loudly the moment your code sends something wrong.
 
 No cassettes. No scattered stubs. No surprises on deploy day.
 
@@ -56,10 +56,10 @@ This test passes even if:
 
 You end up with 50 YAML files nobody touches, all slowly diverging from reality.
 
-### Test 3 — httpfake (what tests should look like)
+### Test 3 — http_decoy (what tests should look like)
 
 ```ruby
-FakeStripe = HttpFake.define(:stripe) do
+FakeStripe = HttpDecoy.define(:stripe) do
   base_url "https://api.stripe.com"
 
   post "/v1/charges" do
@@ -95,7 +95,7 @@ Now your tests:
 ```ruby
 # Gemfile
 group :test do
-  gem "httpfake"
+  gem "http_decoy"
 end
 ```
 
@@ -111,7 +111,7 @@ bundle install
 
 ```ruby
 # spec/support/fakes/fake_stripe.rb
-FakeStripe = HttpFake.define(:stripe) do
+FakeStripe = HttpDecoy.define(:stripe) do
   base_url "https://api.stripe.com"
 
   post "/v1/charges" do
@@ -148,7 +148,7 @@ end
 
 ```ruby
 # spec/spec_helper.rb
-require "httpfake"
+require "http_decoy"
 require "support/fakes/fake_stripe"
 
 RSpec.configure do |config|
@@ -182,9 +182,9 @@ RSpec.describe StripeService do
     end
 
     it "catches bad requests before they reach prod" do
-      # Missing payment_method — httpfake raises immediately with a descriptive error
+      # Missing payment_method — http_decoy raises immediately with a descriptive error
       expect { StripeService.charge(amount: 2000, currency: "usd") }
-        .to raise_error(HttpFake::HandlerContext::ContractError, /payment_method is required/)
+        .to raise_error(HttpDecoy::HandlerContext::ContractError, /payment_method is required/)
     end
   end
 end
@@ -199,7 +199,7 @@ No setup per test. No per-test `stub_request`. No cassette files.
 ### Defining a server
 
 ```ruby
-MyFakeService = HttpFake.define(:my_service) do
+MyFakeService = HttpDecoy.define(:my_service) do
   base_url "https://api.example.com"   # intercepted via WebMock automatically
   # ...routes
 end
@@ -243,7 +243,7 @@ post "/orders" do
 end
 ```
 
-When validation fails, httpfake raises `HttpFake::HandlerContext::ContractError` with a message naming the exact field and rule. Your test fails at the right place, with the right message.
+When validation fails, http_decoy raises `HttpDecoy::HandlerContext::ContractError` with a message naming the exact field and rule. Your test fails at the right place, with the right message.
 
 ### Dynamic responses
 
@@ -324,7 +324,7 @@ Inline per describe block:
 
 ```ruby
 RSpec.describe "degraded upstream" do
-  include HttpFake::RSpec
+  include HttpDecoy::RSpec
 
   fake_server(:api) do
     get "/status" do
@@ -344,7 +344,7 @@ end
 
 ```ruby
 # Opt out of WebMock auto-interception (e.g. if you manage stubs manually)
-HttpFake.configure do |config|
+HttpDecoy.configure do |config|
   config.auto_intercept = false
 end
 ```
@@ -353,7 +353,7 @@ end
 
 ## Why not WebMock / VCR? (honest comparison)
 
-| | WebMock | VCR | **httpfake** |
+| | WebMock | VCR | **http_decoy** |
 |---|---|---|---|
 | Real server | No | No | **Yes** |
 | Request contract validation | No | No | **Yes** |
@@ -365,7 +365,7 @@ end
 | Define once, use everywhere | Requires setup | Yes | **Yes** |
 | Catches API drift | No | No | **Yes** |
 
-httpfake uses WebMock internally to intercept requests — complementary, not a replacement.
+http_decoy uses WebMock internally to intercept requests — complementary, not a replacement.
 
 ---
 
@@ -375,7 +375,7 @@ httpfake uses WebMock internally to intercept requests — complementary, not a 
 <summary>Stripe (payments)</summary>
 
 ```ruby
-FakeStripe = HttpFake.define(:stripe) do
+FakeStripe = HttpDecoy.define(:stripe) do
   base_url "https://api.stripe.com"
 
   post "/v1/payment_intents" do
@@ -404,7 +404,7 @@ end
 <summary>SendGrid (email)</summary>
 
 ```ruby
-FakeSendGrid = HttpFake.define(:sendgrid) do
+FakeSendGrid = HttpDecoy.define(:sendgrid) do
   base_url "https://api.sendgrid.com"
 
   post "/v3/mail/send" do
@@ -423,7 +423,7 @@ end
 <summary>Internal microservice</summary>
 
 ```ruby
-FakeInventory = HttpFake.define(:inventory) do
+FakeInventory = HttpDecoy.define(:inventory) do
   base_url "https://inventory.internal"
 
   get "/products/:sku/stock" do
@@ -458,14 +458,14 @@ end
 ## Contributing
 
 ```bash
-git clone https://github.com/jibranusman/httpfake
-cd httpfake
+git clone https://github.com/jibranusman/http_decoy
+cd http_decoy
 bundle install
 bundle exec rspec      # run all tests
 bundle exec rubocop    # lint
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines. Good first issues are labeled [`good first issue`](https://github.com/jibranusman/httpfake/issues?q=label%3A%22good+first+issue%22).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines. Good first issues are labeled [`good first issue`](https://github.com/jibranusman/http_decoy/issues?q=label%3A%22good+first+issue%22).
 
 ---
 
@@ -475,4 +475,4 @@ MIT. See [LICENSE](LICENSE).
 
 ---
 
-*httpfake — stop testing your assumptions, start testing your contracts.*
+*http_decoy — stop testing your assumptions, start testing your contracts.*

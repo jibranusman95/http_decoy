@@ -5,7 +5,7 @@ require_relative "route_map"
 require_relative "server"
 require_relative "webmock_integration"
 
-module HttpFake
+module HttpDecoy
   # RSpec integration.
   #
   # Two equivalent usage patterns:
@@ -13,7 +13,7 @@ module HttpFake
   # Pattern A — inline (per describe block):
   #
   #   RSpec.describe MyService do
-  #     include HttpFake::RSpec
+  #     include HttpDecoy::RSpec
   #
   #     fake_server(:payments) do
   #       post "/charges" do
@@ -29,7 +29,7 @@ module HttpFake
   #
   # Pattern B — suite-wide definition (most common):
   #
-  #   FakeStripe = HttpFake.define(:stripe) do
+  #   FakeStripe = HttpDecoy.define(:stripe) do
   #     base_url "https://api.stripe.com"
   #     post "/v1/charges" do
   #       respond 200, json: { id: "ch_123" }
@@ -54,26 +54,26 @@ module HttpFake
       def fake_server(name, &)
         route_map = RouteMap.new
         route_map.instance_eval(&)
-        _httpfake_register(name, route_map)
+        _http_decoy_register(name, route_map)
       end
 
       # Internal: register before/after hooks for a pre-built RouteMap.
       # Called by both the inline macro and Definition#rspec_helpers.
-      def _httpfake_register(name, route_map)
+      def _http_decoy_register(name, route_map)
         before(:each) do
           server = Server.new(route_map)
           server.start
           stub = WebMockIntegration.setup(server)
 
-          @_httpfake_servers       ||= {}
-          @_httpfake_webmock_stubs ||= {}
-          @_httpfake_servers[name]       = server
-          @_httpfake_webmock_stubs[name] = stub
+          @_http_decoy_servers       ||= {}
+          @_http_decoy_webmock_stubs ||= {}
+          @_http_decoy_servers[name]       = server
+          @_http_decoy_webmock_stubs[name] = stub
         end
 
         after(:each) do
-          server = @_httpfake_servers&.[](name)
-          stub   = @_httpfake_webmock_stubs&.[](name)
+          server = @_http_decoy_servers&.[](name)
+          stub   = @_http_decoy_webmock_stubs&.[](name)
           WebMockIntegration.teardown(stub)
           server&.stop
         end
@@ -82,21 +82,21 @@ module HttpFake
 
     # Instance-level accessor — returns the live Server for this example.
     def fake_server(name)
-      @_httpfake_servers[name]
+      @_http_decoy_servers[name]
     end
 
     # Run a block with a named scenario active.
     # server_name defaults to the only server if exactly one is registered.
     def with_scenario(scenario_name, server_name = nil, &)
       name = server_name || begin
-        servers = @_httpfake_servers || {}
+        servers = @_http_decoy_servers || {}
         raise ArgumentError, "server_name required when multiple fake servers are active" if servers.size > 1
         raise ArgumentError, "No fake servers are active" if servers.empty?
 
         servers.keys.first
       end
 
-      server = @_httpfake_servers[name]
+      server = @_http_decoy_servers[name]
       raise ArgumentError, "No fake server named #{name.inspect}" unless server
 
       server.with_scenario(scenario_name, &)
@@ -169,7 +169,7 @@ module HttpFake
   end
 
   # ---------------------------------------------------------------------------
-  # Definition — returned by HttpFake.define
+  # Definition — returned by HttpDecoy.define
   # ---------------------------------------------------------------------------
 
   # Wraps a named RouteMap and generates an anonymous RSpec helper module.
@@ -190,16 +190,16 @@ module HttpFake
       definition = self
 
       Module.new do
-        include HttpFake::RSpec
+        include HttpDecoy::RSpec
 
         # define_singleton_method closes over `definition` from the outer scope.
         # `def self.included` would NOT — def never captures outer locals.
         define_singleton_method(:included) do |base|
           super(base)
-          base._httpfake_register(definition.name, definition.route_map)
+          base._http_decoy_register(definition.name, definition.route_map)
         end
 
-        define_method(:_httpfake_definition) { definition }
+        define_method(:_http_decoy_definition) { definition }
       end
     end
   end

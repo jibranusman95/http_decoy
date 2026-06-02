@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module HttpFake
+module HttpDecoy
   # Manages the WebMock stub that routes a declared base_url to the server's Rack app.
   #
-  # Auto-detect: if WebMock is loaded and HttpFake.configuration.auto_intercept is true,
+  # Auto-detect: if WebMock is loaded and HttpDecoy.configuration.auto_intercept is true,
   # requests to the declared base_url are intercepted transparently.
   #
-  # Teardown removes only the stub httpfake created — never calls WebMock.reset!.
+  # Teardown removes only the stub http_decoy created — never calls WebMock.reset!.
   # If WebMock/RSpec has already cleared the registry (its own after(:each) hook),
   # we rescue silently rather than crashing.
   module WebMockIntegration
@@ -18,7 +18,7 @@ module HttpFake
       # Install an interception stub for the given server.
       # Returns the stub object so it can be removed precisely during teardown.
       def setup(server)
-        return nil unless available? && HttpFake.configuration.auto_intercept
+        return nil unless available? && HttpDecoy.configuration.auto_intercept
         return nil unless server.route_map.declared_base_url
 
         # Match the full base URL (scheme + host) so the regex anchors correctly.

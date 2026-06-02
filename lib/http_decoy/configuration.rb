@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module HttpFake
+module HttpDecoy
   class Configuration
     attr_accessor :auto_intercept
 

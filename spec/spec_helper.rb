@@ -6,8 +6,8 @@ SimpleCov.start do
   minimum_coverage 80
 end
 
-require "httpfake"
-require "httpfake/rspec"
+require "http_decoy"
+require "http_decoy/rspec"
 require "webmock/rspec"
 require "net/http"
 require "json"

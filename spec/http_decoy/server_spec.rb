@@ -3,11 +3,11 @@
 require "spec_helper"
 require "net/http"
 
-RSpec.describe HttpFake::Server do
+RSpec.describe HttpDecoy::Server do
   def make_server(&block)
-    map = HttpFake::RouteMap.new
+    map = HttpDecoy::RouteMap.new
     map.instance_eval(&block)
-    HttpFake::Server.new(map)
+    HttpDecoy::Server.new(map)
   end
 
   describe "lifecycle" do

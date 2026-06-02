@@ -3,7 +3,7 @@
 require_relative "route"
 require_relative "router"
 
-module HttpFake
+module HttpDecoy
   # DSL target for defining a set of routes.
   # Instantiated once at class-load time; immutable after definition.
   class RouteMap

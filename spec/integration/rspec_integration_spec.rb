@@ -4,7 +4,7 @@ require "spec_helper"
 require "net/http"
 
 # Suite-wide definition — the primary usage pattern.
-FakePayments = HttpFake.define(:payments) do
+FakePayments = HttpDecoy.define(:payments) do
   base_url "https://payments.test.local"
 
   post "/charges" do
@@ -46,8 +46,8 @@ end
 # WebMock intercepts requests to this URL and routes them to the rack app.
 PAYMENTS_URL = "https://payments.test.local"
 
-RSpec.describe "httpfake RSpec integration" do
-  include HttpFake::RSpec
+RSpec.describe "http_decoy RSpec integration" do
+  include HttpDecoy::RSpec
   include FakePayments.rspec_helpers
 
   def post_charge(payload = { amount: 100, currency: "usd" })
@@ -170,7 +170,7 @@ RSpec.describe "httpfake RSpec integration" do
   end
 
   describe "inline fake_server macro" do
-    include HttpFake::RSpec
+    include HttpDecoy::RSpec
 
     fake_server(:local) do
       get "/status" do

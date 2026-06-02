@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-RSpec.describe HttpFake::Router do
+RSpec.describe HttpDecoy::Router do
   subject(:router) { route_map.router }
 
   let(:route_map) do
-    HttpFake::RouteMap.new.tap do |m|
+    HttpDecoy::RouteMap.new.tap do |m|
       m.get "/users" do
         respond 200, json: {}
       end

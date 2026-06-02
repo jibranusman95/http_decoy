@@ -2,7 +2,7 @@
 
 require "json"
 
-module HttpFake
+module HttpDecoy
   # The `self` inside every route handler block.
   # Provides the full DSL surface: respond, requires_body, validates,
   # body, path_params, query_params, respond_sequence, raise_error.
@@ -81,9 +81,9 @@ module HttpFake
     # Simulate transport-level failures.
     def raise_error(type)
       case type
-      when :timeout  then raise Timeout::Error, "httpfake simulated timeout"
-      when :reset    then raise Errno::ECONNRESET, "httpfake simulated connection reset"
-      when :refused  then raise Errno::ECONNREFUSED, "httpfake simulated connection refused"
+      when :timeout  then raise Timeout::Error, "http_decoy simulated timeout"
+      when :reset    then raise Errno::ECONNRESET, "http_decoy simulated connection reset"
+      when :refused  then raise Errno::ECONNREFUSED, "http_decoy simulated connection refused"
       else                raise type.is_a?(Class) ? type : RuntimeError, type.to_s
       end
     end
