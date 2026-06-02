@@ -12,13 +12,13 @@ Gem::Specification.new do |spec|
   spec.description   = "httpfake spins up a real Rack server inside your tests with a clean DSL. " \
                        "Define routes, validate request contracts, return dynamic fixtures, and tear down " \
                        "automatically. No VCR cassettes. No scattered WebMock stubs."
-  spec.homepage      = "https://github.com/jibranusman/httpfake"
+  spec.homepage      = "https://github.com/jibranusman95/httpfake"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.1.0"
 
   spec.metadata["homepage_uri"]    = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/jibranusman/httpfake"
-  spec.metadata["changelog_uri"]   = "https://github.com/jibranusman/httpfake/blob/main/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/jibranusman95/httpfake"
+  spec.metadata["changelog_uri"]   = "https://github.com/jibranusman95/httpfake/blob/main/CHANGELOG.md"
   spec.metadata["rubygems_mfa_required"] = "true"
 
   gemspec = File.basename(__FILE__)
