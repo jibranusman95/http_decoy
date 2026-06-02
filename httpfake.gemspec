@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "httpfake"
   spec.version       = HttpFake::VERSION
   spec.authors       = ["Jibran Usman"]
-  spec.email         = ["jibran.usman@eunasolutions.com"]
+  spec.email         = ["jibran.usman@hotmail.com"]
 
   spec.summary       = "Declarative fake HTTP servers for RSpec. Real server. Real requests. Zero cassettes."
   spec.description   = "httpfake spins up a real Rack server inside your tests with a clean DSL. " \
