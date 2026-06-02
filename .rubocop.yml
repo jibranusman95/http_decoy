@@ -1,0 +1,102 @@
+require:
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1
+  Exclude:
+    - "bin/**/*"
+    - "sig/**/*"
+    - "coverage/**/*"
+    - "pkg/**/*"
+    - "vendor/**/*"
+
+# ── Style ──────────────────────────────────────────────────────────────────
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
+Style/Documentation:
+  Enabled: false   # internal gem, module-level docs live in README
+
+Style/OpenStructUse:
+  Enabled: false
+
+# Allow one-line method definitions (e.g. def port = @port)
+Style/EndlessMethod:
+  Enabled: true
+  EnforcedStyle: allow_single_line
+
+# ── Layout ─────────────────────────────────────────────────────────────────
+
+Layout/LineLength:
+  Max: 120
+  AllowedPatterns:
+    - '^\s*#'     # comments can be longer
+    - '^\s*it '   # long RSpec descriptions
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+# ── Metrics ────────────────────────────────────────────────────────────────
+
+Metrics/MethodLength:
+  Max: 30
+  Exclude:
+    - "spec/**/*"
+
+Metrics/BlockLength:
+  Max: 60
+  Exclude:
+    - "spec/**/*"
+    - "httpfake.gemspec"
+
+Metrics/AbcSize:
+  Max: 40
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/CyclomaticComplexity:
+  Max: 12
+
+Metrics/PerceivedComplexity:
+  Max: 12
+
+# ── RuboCop-RSpec path convention ──────────────────────────────────────────
+# Our module is HttpFake but the gem/dir is httpfake (no underscore).
+# RSpec/SpecFilePathFormat expects http_fake/ — disable it.
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+# ── Lint ───────────────────────────────────────────────────────────────────
+# We intentionally use === for matcher duck-typing in the have_received_request
+# matcher (e.g. RSpec matchers, Ranges, Regexps all respond to ===).
+Style/CaseEquality:
+  Exclude:
+    - "lib/httpfake/rspec.rb"
+
+# Entry uses :http_method not :method, so this is moot — kept for awareness.
+Lint/StructNewOverride:
+  Enabled: true
+
+# ── RSpec ──────────────────────────────────────────────────────────────────
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/DescribeClass:
+  Enabled: false   # integration specs don't always describe a class
+
+RSpec/IndexedLet:
+  Enabled: false
