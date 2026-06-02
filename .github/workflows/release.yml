@@ -32,4 +32,4 @@ jobs:
         run: bundle exec rake build
 
       - name: Push to RubyGems
-        run: gem push pkg/httpfake-*.gem
+        run: gem push pkg/*.gem
