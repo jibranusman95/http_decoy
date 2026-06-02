@@ -3,7 +3,7 @@
 require_relative "lib/httpfake/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "httpfake"
+  spec.name          = "http_decoy"
   spec.version       = HttpFake::VERSION
   spec.authors       = ["Jibran Usman"]
   spec.email         = ["jibran.usman@hotmail.com"]
