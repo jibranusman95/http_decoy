@@ -27,7 +27,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: matrix.ruby == '3.3'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           files: coverage/.resultset.json
         continue-on-error: true   # don't fail CI if Codecov is down
