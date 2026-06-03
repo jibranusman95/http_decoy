@@ -455,6 +455,12 @@ end
 
 ---
 
+## Further Reading
+
+- [Why WebMock Stubs Lie (And What To Do About It)](https://dev.to/jibranusman95/why-webmock-stubs-lie-and-what-to-do-about-it-4990) — the problem http_decoy was built to solve, with examples
+
+---
+
 ## Contributing
 
 ```bash
