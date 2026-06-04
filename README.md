@@ -475,6 +475,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines. Good first issues ar
 
 ---
 
+## From the same author
+
+Small, sharp Ruby gems built to the same standard — 100% test coverage, zero dependencies beyond what's needed.
+
+| Gem | What it does |
+|-----|-------------|
+| [turbo_presence](https://github.com/jibranusman95/turbo_presence) | Figma-style live cursors, avatar stacks, and typing indicators for Rails/Hotwire |
+| [promptscrub](https://github.com/jibranusman95/promptscrub) | PII redaction middleware for LLM calls — strip sensitive data from prompts, rehydrate in responses |
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
