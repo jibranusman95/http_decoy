@@ -481,6 +481,7 @@ Small, sharp Ruby gems built to the same standard — 100% test coverage, zero d
 
 | Gem | What it does |
 |-----|-------------|
+| [llm_cassette](https://github.com/jibranusman95/llm_cassette) | VCR for LLMs — streaming-aware cassette recorder for OpenAI and Anthropic |
 | [turbo_presence](https://github.com/jibranusman95/turbo_presence) | Figma-style live cursors, avatar stacks, and typing indicators for Rails/Hotwire |
 | [promptscrub](https://github.com/jibranusman95/promptscrub) | PII redaction middleware for LLM calls — strip sensitive data from prompts, rehydrate in responses |
 | [webhook_inbox](https://github.com/jibranusman95/webhook_inbox) | Transactional inbox for Rails webhook receivers — deduplication, async processing, replay, dashboard |
