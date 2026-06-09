@@ -97,13 +97,13 @@ RSpec.describe "http_decoy RSpec integration" do
     it "rejects missing required fields with 422" do
       res = post_charge(amount: 100) # missing currency
       expect(res.code).to eq "422"
-      expect(JSON.parse(res.body)["error"]).to match(/currency/)
+      expect(JSON.parse(res.body)["error"]).to include("currency")
     end
 
     it "rejects amounts below the minimum" do
       res = post_charge(amount: 10, currency: "usd")
       expect(res.code).to eq "422"
-      expect(JSON.parse(res.body)["error"]).to match(/amount/)
+      expect(JSON.parse(res.body)["error"]).to include("amount")
     end
   end
 

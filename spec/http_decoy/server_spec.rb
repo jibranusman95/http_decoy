@@ -114,13 +114,13 @@ RSpec.describe HttpDecoy::Server do
     it "returns 422 when a required field is missing" do
       res = post_charge({ amount: 100 })
       expect(res.code).to eq "422"
-      expect(JSON.parse(res.body)["error"]).to match(/currency/)
+      expect(JSON.parse(res.body)["error"]).to include("currency")
     end
 
     it "returns 422 when validation fails" do
       res = post_charge({ amount: 10, currency: "usd" })
       expect(res.code).to eq "422"
-      expect(JSON.parse(res.body)["error"]).to match(/amount/)
+      expect(JSON.parse(res.body)["error"]).to include("amount")
     end
   end
 
