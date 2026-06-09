@@ -1,67 +1,37 @@
 # Contributing to http_decoy
 
-Thanks for taking the time. Bug reports, documentation improvements, and feature proposals are all welcome.
+First: thank you. It genuinely means a lot.
 
-## Setup
+## Quick start
 
 ```bash
 git clone https://github.com/jibranusman95/http_decoy
 cd http_decoy
 bundle install
+bundle exec rspec    # make sure everything is green before you start
+bundle exec rubocop  # no existing offenses to inherit
 ```
 
-## Running the tests
+## How to contribute
 
-```bash
-bundle exec rspec          # full suite
-bundle exec rspec spec/http_decoy/server_spec.rb   # single file
-```
+**Found a bug?** Open an issue. Include a minimal reproduction if you can — it'll get fixed faster.
 
-## Linting
+**Want a feature?** Open an issue first so we can align before you build. Nothing worse than putting work into something that doesn't fit.
 
-```bash
-bundle exec rubocop        # check
-bundle exec rubocop -a     # autocorrect safe offenses
-```
+**Have a fix ready?** Just open a PR. One thing per PR. Include a failing test if the change is non-trivial.
 
-Both must be green before a PR can be merged. CI enforces this on every push.
+**Docs or README improvements?** Also very welcome — just send the PR directly.
 
-## Submitting a pull request
+## Before you submit
 
-1. Fork the repo and create a branch from `main`
-2. Write a failing test that describes the bug or feature
-3. Make it pass
-4. Run `bundle exec rspec` and `bundle exec rubocop` — both must be clean
-5. Update `CHANGELOG.md` under `[Unreleased]`
-6. Open a PR with a clear description of what and why
+- `bundle exec rspec` — all green
+- `bundle exec rubocop` — no new offenses
+- Focused scope — one fix or feature per PR
 
-## What we're looking for
+## What happens next
 
-- Bug fixes with a reproducing spec
-- New DSL features (propose in an issue first if it's non-trivial)
-- Additional body content-type support
-- Better error messages
-- Real-world usage examples in the README
+I review promptly — usually within a day or two, often faster. I'll either merge it, ask for changes with clear reasoning, or explain why it doesn't fit. No ghosting.
 
-## Good first issues
+## License
 
-Check the [`good first issue`](https://github.com/jibranusman95/http_decoy/issues?q=label%3A%22good+first+issue%22) label for beginner-friendly tasks.
-
-## Code style
-
-- `frozen_string_literal: true` on every file
-- Follow the existing RuboCop config (`.rubocop.yml`)
-- Keep handler blocks and DSL methods small and focused
-- No clever metaprogramming without a comment explaining why
-
-## Reporting bugs
-
-Open a GitHub issue with:
-- Ruby version (`ruby --version`)
-- http_decoy version
-- Minimal reproduction case (ideally a failing RSpec example)
-- What you expected vs what happened
-
-## Security issues
-
-Do not open a public issue for security vulnerabilities. Email the maintainer directly (address in the gemspec).
+By contributing, you agree your changes are released under the same [MIT License](LICENSE) as this project.
