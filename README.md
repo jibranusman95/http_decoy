@@ -485,6 +485,7 @@ Small, sharp Ruby gems built to the same standard — 100% test coverage, zero d
 | [turbo_presence](https://github.com/jibranusman95/turbo_presence) | Figma-style live cursors, avatar stacks, and typing indicators for Rails/Hotwire |
 | [promptscrub](https://github.com/jibranusman95/promptscrub) | PII redaction middleware for LLM calls — strip sensitive data from prompts, rehydrate in responses |
 | [webhook_inbox](https://github.com/jibranusman95/webhook_inbox) | Transactional inbox for Rails webhook receivers — deduplication, async processing, replay, dashboard |
+| [agent_jail](https://github.com/jibranusman95/agent_jail) | Fork-based sandbox for LLM tool calls — timeout, memory limit, and filesystem restrictions |
 
 ## License
 
