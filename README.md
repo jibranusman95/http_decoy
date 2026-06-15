@@ -355,15 +355,15 @@ end
 
 | | WebMock | VCR | **http_decoy** |
 |---|---|---|---|
-| Real server | No | No | **Yes** |
-| Request contract validation | No | No | **Yes** |
-| Dynamic responses | No | No | **Yes** |
+| Real server | optional | No | **Yes** |
+| Request contract validation | possible | No | **Yes** |
+| Dynamic responses | yes | No | **Yes** |
 | Failure scenario testing | Verbose | Very hard | **One line** |
 | Works offline | Yes | First run: No | **Yes** |
 | Secrets in version control | No | **Risk** | No |
 | Cassettes to maintain | No | **Yes** | No |
 | Define once, use everywhere | Requires setup | Yes | **Yes** |
-| Catches API drift | No | No | **Yes** |
+| Catches API drift | possible | No | **Yes** |
 
 http_decoy uses WebMock internally to intercept requests — complementary, not a replacement.
 
