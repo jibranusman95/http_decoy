@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-07-09
+
 ### Added
 
 - `HttpDecoy::Minitest` — Minitest integration, parallel to `HttpDecoy::RSpec`:
@@ -55,5 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ruby 3.1+ support
 - 92% test coverage (SimpleCov), 66 examples
 
-[Unreleased]: https://github.com/jibranusman95/http_decoy/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/jibranusman95/http_decoy/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/jibranusman95/http_decoy/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/jibranusman95/http_decoy/releases/tag/v0.1.0
