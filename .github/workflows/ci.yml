@@ -23,7 +23,7 @@ jobs:
           bundler-cache: true
 
       - name: Run tests
-        run: bundle exec rake spec
+        run: bundle exec rake # spec (RSpec) + test (Minitest) — see Rakefile
 
       - name: Upload coverage to Codecov
         if: matrix.ruby == '3.3'

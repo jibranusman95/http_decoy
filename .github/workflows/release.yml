@@ -18,7 +18,7 @@ jobs:
           bundler-cache: true
 
       - name: Run tests before publishing
-        run: bundle exec rake spec
+        run: bundle exec rake # spec (RSpec) + test (Minitest) — see Rakefile
 
       - name: Configure RubyGems credentials
         run: |
