@@ -4,6 +4,8 @@ require "rspec/core"
 require_relative "route_map"
 require_relative "server"
 require_relative "webmock_integration"
+require_relative "definition"
+require_relative "body_matcher"
 
 module HttpDecoy
   # RSpec integration.
@@ -112,7 +114,7 @@ module HttpDecoy
       entries = server.request_log.for(method, path)
       next false if entries.empty?
       next false if @times && entries.count != @times
-      next false if @body_matcher && entries.none? { |e| body_matches?(e.body, @body_matcher) }
+      next false if @body_matcher && entries.none? { |e| HttpDecoy::BodyMatcher.matches?(e.body, @body_matcher) }
 
       true
     end
@@ -154,33 +156,14 @@ module HttpDecoy
       desc += " with body matching #{@body_matcher.inspect}" if @body_matcher
       desc
     end
-
-    def body_matches?(actual, matcher)
-      case matcher
-      when Hash
-        actual.is_a?(Hash) && matcher.all? do |k, v|
-          actual_val = actual[k] || actual[k.to_s]
-          v === actual_val
-        end
-      else
-        matcher === actual
-      end
-    end
   end
 
   # ---------------------------------------------------------------------------
   # Definition — returned by HttpDecoy.define
   # ---------------------------------------------------------------------------
 
-  # Wraps a named RouteMap and generates an anonymous RSpec helper module.
+  # Reopens Definition (see definition.rb) to add the RSpec-specific helper.
   class Definition
-    attr_reader :name, :route_map
-
-    def initialize(name, route_map)
-      @name      = name
-      @route_map = route_map
-    end
-
     # Returns an anonymous module. Include it in RSpec.configure to register
     # the server lifecycle for every example group in the suite.
     #
@@ -194,8 +177,15 @@ module HttpDecoy
 
         # define_singleton_method closes over `definition` from the outer scope.
         # `def self.included` would NOT — def never captures outer locals.
+        #
+        # `extend` is required here: `include HttpDecoy::RSpec` above only ran
+        # HttpDecoy::RSpec.included against *this anonymous module*, not against
+        # `base` — Ruby's included hook does not cascade through nested includes.
+        # Without this line, `RSpec.configure { |c| c.include Foo.rspec_helpers }`
+        # used on its own raises NoMethodError on `_http_decoy_register`.
         define_singleton_method(:included) do |base|
           super(base)
+          base.extend(HttpDecoy::RSpec::ClassMethods)
           base._http_decoy_register(definition.name, definition.route_map)
         end
 

@@ -42,7 +42,11 @@ module HttpDecoy
     end
 
     # Build and store the response tuple for this request.
-    def respond(status, json: nil, text: nil, headers: {})
+    # `after:` delays the response by the given number of seconds — useful
+    # for testing timeout thresholds and loading states against a real clock,
+    # not just a raised exception.
+    def respond(status, json: nil, text: nil, headers: {}, after: nil)
+      sleep(after) if after&.positive?
       body_str     = json ? JSON.generate(resolve(json)) : text.to_s
       content_type = json ? "application/json" : "text/plain"
       @_response   = [status.to_i, { "Content-Type" => content_type }.merge(headers), [body_str]]

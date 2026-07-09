@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `HttpDecoy::Minitest` — Minitest integration, parallel to `HttpDecoy::RSpec`:
+  - `include HttpDecoy::Minitest` + `fake_server(name) { ... }` class macro (inline pattern)
+  - `HttpDecoy.define(:name) { ... }.minitest_helpers` — suite-wide helper module, shared with RSpec via the same `Definition`
+  - `assert_received_request(server, method, path, times:, body:)` / `refute_received_request(server, method, path)` assertions
+  - `with_scenario(:name) { ... }` instance method, same semantics as the RSpec version
+  - `require "http_decoy/minitest"` never loads RSpec, and `require "http_decoy/rspec"` never loads Minitest
+- `respond(status, ..., after: seconds)` — delay a response by a real, measurable amount of time; useful for testing timeout thresholds and loading states against a wall clock rather than a raised exception. Works with `respond_sequence` entries too.
+- `raise_error(:timeout | :reset | :refused)` now actually terminates the TCP connection when the fake server is reached over a real socket (not via WebMock interception) — previously this path silently returned a normal `500` response instead of simulating a dropped connection, so code that specifically handles `Errno::ECONNRESET`/timeouts was never exercised unless WebMock was in the loop. Uses `SO_LINGER` to force a real RST rather than a clean EOF.
+
+### Fixed
+
+- `HttpDecoy.define(:name) { ... }.rspec_helpers` used standalone via `RSpec.configure { |c| c.include Foo.rspec_helpers }` (the primary documented usage) raised `NoMethodError` on `_http_decoy_register` unless the example group also separately did `include HttpDecoy::RSpec`. Ruby's `included` hook doesn't cascade through nested `include`s, so the generated helper module's `included` callback now explicitly extends `ClassMethods` onto the includer.
+
+### Changed
+
+- `HttpDecoy::Definition` moved to its own file (`definition.rb`) so `HttpDecoy.define` no longer force-loads RSpec — a Minitest-only project including `http_decoy/minitest` never pulls in `rspec/core`, and vice versa.
+- Deduplicated the request-body matcher shared by the RSpec `have_received_request(...).with(body:)` chain and the new Minitest `assert_received_request(..., body:)` into `HttpDecoy::BodyMatcher`.
+
 ## [0.1.0] — 2026-06-02
 
 ### Added

@@ -8,8 +8,9 @@ First: thank you. It genuinely means a lot.
 git clone https://github.com/jibranusman95/http_decoy
 cd http_decoy
 bundle install
-bundle exec rspec    # make sure everything is green before you start
-bundle exec rubocop  # no existing offenses to inherit
+bundle exec rspec     # RSpec suite — make sure everything is green before you start
+bundle exec rake test # Minitest suite
+bundle exec rubocop   # no existing offenses to inherit
 ```
 
 ## How to contribute
@@ -25,6 +26,7 @@ bundle exec rubocop  # no existing offenses to inherit
 ## Before you submit
 
 - `bundle exec rspec` — all green
+- `bundle exec rake test` — all green (Minitest suite)
 - `bundle exec rubocop` — no new offenses
 - Focused scope — one fix or feature per PR
 

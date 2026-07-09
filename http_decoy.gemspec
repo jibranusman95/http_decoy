@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Jibran Usman"]
   spec.email         = ["jibran.usman@hotmail.com"]
 
-  spec.summary       = "Declarative fake HTTP servers for RSpec. Real server. Real requests. Zero cassettes."
+  spec.summary       = "Declarative fake HTTP servers for RSpec and Minitest. Real server. Real requests. Zero cassettes."
   spec.description   = "http_decoy spins up a real Rack server inside your tests with a clean DSL. " \
                        "Define routes, validate request contracts, return dynamic fixtures, and tear down " \
                        "automatically. No VCR cassettes. No scattered WebMock stubs."

@@ -9,6 +9,7 @@ require_relative "http_decoy/request_log"
 require_relative "http_decoy/handler_context"
 require_relative "http_decoy/server"
 require_relative "http_decoy/webmock_integration"
+require_relative "http_decoy/definition"
 
 module HttpDecoy
   class << self
@@ -25,7 +26,7 @@ module HttpDecoy
       @configuration ||= Configuration.new
     end
 
-    # Define a named fake service.
+    # Define a named fake service, reusable across RSpec and Minitest.
     #
     #   FakeStripe = HttpDecoy.define(:stripe) do
     #     base_url "https://api.stripe.com"
@@ -37,9 +38,13 @@ module HttpDecoy
     #   end
     #
     #   RSpec.configure { |c| c.include FakeStripe.rspec_helpers }
+    #   # or, in a Minitest::Test subclass:
+    #   include FakeStripe.minitest_helpers
     #
+    # #rspec_helpers requires "http_decoy/rspec" to be loaded; #minitest_helpers
+    # requires "http_decoy/minitest" — this method itself pulls in neither, so
+    # a Minitest-only project never loads RSpec (and vice versa).
     def define(name = :default, &)
-      require_relative "http_decoy/rspec"
       route_map = RouteMap.new
       route_map.instance_eval(&)
       Definition.new(name, route_map)

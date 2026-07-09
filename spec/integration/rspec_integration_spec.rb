@@ -46,6 +46,14 @@ end
 # WebMock intercepts requests to this URL and routes them to the rack app.
 PAYMENTS_URL = "https://payments.test.local"
 
+# Regression fixture for the config.include-only registration path (no
+# separate `include HttpDecoy::RSpec`) — see "suite-wide definition" below.
+FakeStatusOnly = HttpDecoy.define(:status_only) do
+  get "/health" do
+    respond 200, json: { ok: true }
+  end
+end
+
 RSpec.describe "http_decoy RSpec integration" do
   include HttpDecoy::RSpec
   include FakePayments.rspec_helpers
@@ -183,6 +191,19 @@ RSpec.describe "http_decoy RSpec integration" do
       res = Net::HTTP.get_response(URI("#{local_server.base_url}/status"))
       expect(res.code).to eq "200"
       expect(JSON.parse(res.body)["healthy"]).to be true
+    end
+  end
+
+  describe "suite-wide definition without a separate HttpDecoy::RSpec include" do
+    # Deliberately does NOT `include HttpDecoy::RSpec` — only the definition's
+    # own helper module. Registration must work standalone, matching the
+    # documented `RSpec.configure { |c| c.include Foo.rspec_helpers }` usage.
+    include FakeStatusOnly.rspec_helpers
+
+    it "registers the server and exposes fake_server" do
+      res = Net::HTTP.get_response(URI("#{fake_server(:status_only).base_url}/health"))
+      expect(res.code).to eq "200"
+      expect(JSON.parse(res.body)["ok"]).to be true
     end
   end
 end

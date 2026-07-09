@@ -194,4 +194,67 @@ RSpec.describe HttpDecoy::Server do
       expect(JSON.parse(r4.body)["balance"]).to eq 1000
     end
   end
+
+  describe "response delay (respond after:)" do
+    subject(:server) do
+      make_server do
+        get "/slow" do
+          respond 200, json: { ok: true }, after: 0.05
+        end
+      end.tap(&:start)
+    end
+
+    after { server.stop }
+
+    it "delays sending the response by the given number of seconds" do
+      started = Time.now
+      res = Net::HTTP.get_response(URI("#{server.base_url}/slow"))
+      expect(Time.now - started).to be >= 0.05
+      expect(res.code).to eq "200"
+    end
+  end
+
+  describe "raise_error over a real socket (no WebMock in between)" do
+    subject(:server) do
+      make_server do
+        get("/reset")   { raise_error :reset }
+        get("/refused") { raise_error :refused }
+        get("/timeout") { raise_error :timeout }
+        get("/boom")    { raise "a genuine bug, not a simulated failure" }
+      end.tap(&:start)
+    end
+
+    after { server.stop }
+
+    # Over a raw socket there's no HTTP status code for "connection died" —
+    # the client sees the connection itself fail, not a response. Depending
+    # on timing, Net::HTTP surfaces this as ECONNRESET or EOFError.
+    def expect_dropped_connection(path)
+      error = nil
+      begin
+        Net::HTTP.get_response(URI("#{server.base_url}#{path}"))
+      rescue StandardError => e
+        error = e
+      end
+      expect(error).to be_a(EOFError).or be_a(Errno::ECONNRESET)
+    end
+
+    it "drops the connection for :reset instead of returning a 500" do
+      expect_dropped_connection("/reset")
+    end
+
+    it "drops the connection for :refused instead of returning a 500" do
+      expect_dropped_connection("/refused")
+    end
+
+    it "drops the connection for :timeout instead of returning a 500" do
+      expect_dropped_connection("/timeout")
+    end
+
+    it "still returns a 500 with a message for a genuine unhandled error" do
+      res = Net::HTTP.get_response(URI("#{server.base_url}/boom"))
+      expect(res.code).to eq "500"
+      expect(JSON.parse(res.body)["error"]).to include("a genuine bug")
+    end
+  end
 end

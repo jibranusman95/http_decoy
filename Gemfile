@@ -9,6 +9,7 @@ gem "rake", "~> 13.0"
 gem "webrick", "~> 1.8"
 
 group :test do
+  gem "minitest", "~> 5.24"
   gem "rack", ">= 2.0"
   gem "rack-test", "~> 2.1"
   gem "rspec", "~> 3.13"

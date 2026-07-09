@@ -279,6 +279,25 @@ end
 
 Available transport errors: `:timeout`, `:reset`, `:refused`.
 
+How the client observes this depends on how the request reached http_decoy:
+
+- **Through WebMock's interception** (the default, whenever `base_url` is declared) — the exact matching Ruby exception (`Timeout::Error`, `Errno::ECONNRESET`, `Errno::ECONNREFUSED`) is raised directly at your HTTP client's call site, so `rescue Errno::ECONNRESET` in your code sees a real instance of that class.
+- **Hitting the server directly over a real socket** (`server.base_url` with no WebMock in between — e.g. an SDK-under-test that owns its own connection) — there's no HTTP status code for "the connection died," so http_decoy actually terminates the TCP connection (via `SO_LINGER`, which forces the kernel to send RST) rather than returning a response. Your client sees a genuine connection failure, not a 500.
+
+Either way, an unhandled exception from your *own* handler code (a real bug, not `raise_error`) still returns a normal `500` with the error message in the body — that path is unchanged.
+
+### Simulating latency
+
+`respond` accepts `after:` (seconds) to delay the response — useful for testing timeout thresholds, loading states, or spinners against a real clock instead of a raised exception:
+
+```ruby
+get "/slow-report" do
+  respond 200, json: { status: "ready" }, after: 2.5
+end
+```
+
+Works with `respond_sequence` too — set `after:` per entry to simulate a service that degrades over successive calls.
+
 ### Stateful sequences
 
 ```ruby
@@ -337,6 +356,45 @@ RSpec.describe "degraded upstream" do
   end
 end
 ```
+
+---
+
+## Minitest integration
+
+Same DSL, same `HttpDecoy.define` definitions — `require "http_decoy/minitest"` never loads RSpec, and vice versa.
+
+Suite-wide (recommended) — same `FakeStripe` definition as above, shared across both frameworks:
+
+```ruby
+class ChargeTest < Minitest::Test
+  include FakeStripe.minitest_helpers
+
+  def test_charges_the_card
+    StripeService.charge(500)
+    assert_received_request fake_server(:stripe), :post, "/v1/charges"
+  end
+end
+```
+
+Inline per test class:
+
+```ruby
+class DegradedUpstreamTest < Minitest::Test
+  include HttpDecoy::Minitest
+
+  fake_server(:api) do
+    get "/status" do
+      respond 503, json: { status: "degraded" }
+    end
+  end
+
+  def test_handles_it_gracefully
+    assert_equal :degraded, MyApp.health_check
+  end
+end
+```
+
+Assertions: `assert_received_request(server, method, path, times:, body:)` and `refute_received_request(server, method, path)` mirror the RSpec `have_received_request` matcher's chains.
 
 ---
 
@@ -452,6 +510,7 @@ end
 - Ruby 3.1+
 - Runtime dependencies: `webrick`, `rack` (both lightweight)
 - Optional: `webmock` for URL interception
+- Works with RSpec or Minitest — neither is a runtime dependency; only the integration you `require` gets loaded
 
 ---
 
@@ -473,7 +532,8 @@ Not sure where to start? Look for [`good first issue`](https://github.com/jibran
 git clone https://github.com/jibranusman95/http_decoy
 cd http_decoy
 bundle install
-bundle exec rspec    # all green? you're good to go
+bundle exec rspec    # RSpec suite
+bundle exec rake test # Minitest suite
 bundle exec rubocop  # no new offenses
 ```
 

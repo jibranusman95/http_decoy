@@ -81,6 +81,18 @@ RSpec.describe HttpDecoy::HandlerContext do
       _, headers, = ctx.response
       expect(headers["X-Custom"]).to eq "yes"
     end
+
+    it "delays the response by `after:` seconds" do
+      started = Time.now
+      ctx.respond(200, json: {}, after: 0.05)
+      expect(Time.now - started).to be >= 0.05
+    end
+
+    it "does not delay when `after:` is nil" do
+      started = Time.now
+      ctx.respond(200, json: {})
+      expect(Time.now - started).to be < 0.05
+    end
   end
 
   describe "#requires_body" do

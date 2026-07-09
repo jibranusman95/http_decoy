@@ -2,6 +2,7 @@
 
 require "webrick"
 require "rack"
+require "socket"
 require "stringio"
 require "json"
 require_relative "request_log"
@@ -44,6 +45,13 @@ module HttpDecoy
         res.status = status.to_i
         headers.each { |k, v| res[k] = v }
         res.body = Array(body).join
+      rescue Timeout::Error, Errno::ECONNRESET, Errno::ECONNREFUSED
+        # raise_error(:timeout/:reset/:refused): over a real socket there's no
+        # response that means "the connection died" — the only faithful
+        # simulation is to actually kill the connection. (Over WebMock's
+        # to_rack interception this same exception instead propagates directly
+        # to the caller, which is the more common path and needs no help here.)
+        drop_connection(req)
       rescue StandardError => e
         res.status = 500
         res["Content-Type"] = "application/json"
@@ -161,6 +169,32 @@ module HttpDecoy
 
     def json_response(status, payload)
       [status.to_i, { "Content-Type" => "application/json" }, [JSON.generate(payload)]]
+    end
+
+    # Forcibly terminate the underlying TCP connection instead of sending a
+    # response. WEBrick::HTTPRequest stores the raw socket in @socket once
+    # #parse has run (it's not exposed through the public API) — reaching in
+    # is the only way to make a "connection reset" simulation actually reset
+    # the connection rather than returning a normal 500 response.
+    #
+    # SO_LINGER 0 makes the kernel send RST on close instead of a graceful
+    # FIN, so the client observes a real ECONNRESET (or equivalent) rather
+    # than a clean EOF. Any failure here (unsupported socket, already closed)
+    # is swallowed — the surrounding WEBrick request loop still tries to
+    # write a response to the now-closed socket and fails safely on its own.
+    def drop_connection(req)
+      sock = req.instance_variable_get(:@socket)
+      return unless sock
+
+      begin
+        sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_LINGER, [1, 0].pack("ii"))
+      rescue StandardError
+        nil
+      end
+
+      sock.close
+    rescue StandardError
+      nil
     end
   end
 end
